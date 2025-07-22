@@ -62,7 +62,7 @@ const PaperComments = ({ paperId, onClose }) => {
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 max-h-[80vh] flex flex-col">
+    <div className="h-full flex flex-col bg-white dark:bg-gray-800">
       {/* Header */}
       <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
         <div className="flex items-center space-x-3">
@@ -112,8 +112,8 @@ const PaperComments = ({ paperId, onClose }) => {
       )}
 
       {/* Comments List */}
-      <div className="flex-1 overflow-y-auto pb-6">
-        {/* Minimal bottom padding since footer is hidden */}
+      <div className="flex-1 overflow-y-auto min-h-0">
+        {/* Content area that takes remaining space */}
         {loading ? (
           <div className="flex justify-center py-12">
             <LoadingSpinner />
@@ -142,8 +142,8 @@ const PaperComments = ({ paperId, onClose }) => {
             </button>
           </div>
         ) : (
-          <div className="p-4 pb-6 space-y-4">
-            {/* Normal padding since footer is hidden on comments tab */}
+          <div className="p-4 space-y-4">
+            {/* Comments list */}
             {comments.map((comment) => (
               <CommentItem
                 key={comment._id}
@@ -159,22 +159,22 @@ const PaperComments = ({ paperId, onClose }) => {
         )}
       </div>
 
-      {/* Footer Stats */}
-      {!loading && comments.length > 0 && (
-        <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50">
+      {/* Footer Stats - Always shown at bottom */}
+      {!loading && (
+        <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50 mt-auto">
           <div className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-400">
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-1">
                 <UserIcon className="h-4 w-4" />
                 <span>
-                  {
-                    new Set(
-                      comments.flatMap((c) => [
-                        c.user._id,
-                        ...(c.replies?.map((r) => r.user._id) || []),
-                      ])
-                    ).size
-                  }{" "}
+                  {comments.length > 0
+                    ? new Set(
+                        comments.flatMap((c) => [
+                          c.user._id,
+                          ...(c.replies?.map((r) => r.user._id) || []),
+                        ])
+                      ).size
+                    : 0}{" "}
                   participants
                 </span>
               </div>
@@ -187,16 +187,22 @@ const PaperComments = ({ paperId, onClose }) => {
             <div className="flex items-center space-x-1">
               <ClockIcon className="h-4 w-4" />
               <span>
-                Last activity{" "}
-                {paperService.formatTimeAgo(
-                  Math.max(
-                    ...comments.flatMap((c) => [
-                      new Date(c.createdAt).getTime(),
-                      ...(c.replies?.map((r) =>
-                        new Date(r.createdAt).getTime()
-                      ) || []),
-                    ])
-                  )
+                {comments.length > 0 ? (
+                  <>
+                    Last activity{" "}
+                    {paperService.formatTimeAgo(
+                      Math.max(
+                        ...comments.flatMap((c) => [
+                          new Date(c.createdAt).getTime(),
+                          ...(c.replies?.map((r) =>
+                            new Date(r.createdAt).getTime()
+                          ) || []),
+                        ])
+                      )
+                    )}
+                  </>
+                ) : (
+                  "No activity yet"
                 )}
               </span>
             </div>

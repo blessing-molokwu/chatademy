@@ -8,7 +8,6 @@ import {
   DocumentTextIcon,
   CalendarIcon,
   EllipsisVerticalIcon,
-  StarIcon,
   EyeIcon,
   XMarkIcon,
   FunnelIcon,
@@ -19,7 +18,6 @@ import {
   CogIcon,
   ExclamationTriangleIcon,
 } from "@heroicons/react/24/outline";
-import { StarIcon as StarIconSolid } from "@heroicons/react/24/solid";
 import ModernCard from "../components/ModernCard";
 import ModernButton from "../components/ModernButton";
 import groupService from "../services/groupService";
@@ -35,14 +33,13 @@ const Groups = () => {
   const [activeTab, setActiveTab] = useState("my-groups");
   const [searchTerm, setSearchTerm] = useState("");
   const [showCreateModal, setShowCreateModal] = useState(false);
-  const [showPreviewModal, setShowPreviewModal] = useState(false);
+
   const [showSettingsModal, setShowSettingsModal] = useState(false);
   const [showMembersModal, setShowMembersModal] = useState(false);
   const [selectedGroup, setSelectedGroup] = useState(null);
   const [showFilters, setShowFilters] = useState(false);
   const [selectedField, setSelectedField] = useState("all");
   const [sortBy, setSortBy] = useState("activity");
-  const [favoriteGroups, setFavoriteGroups] = useState([]);
 
   // Data State
   const [myGroups, setMyGroups] = useState([]);
@@ -248,18 +245,6 @@ const Groups = () => {
   ];
 
   // Helper functions
-  const toggleFavorite = (groupId) => {
-    setFavoriteGroups((prev) =>
-      prev.includes(groupId)
-        ? prev.filter((id) => id !== groupId)
-        : [...prev, groupId]
-    );
-  };
-
-  const openPreview = (group) => {
-    setSelectedGroup(group);
-    setShowPreviewModal(true);
-  };
 
   const openSettings = (group) => {
     setSelectedGroup(group);
@@ -426,7 +411,7 @@ const Groups = () => {
         <div className="absolute bottom-0 left-0 w-16 h-16 bg-gradient-to-tr from-purple-200/20 to-transparent rounded-full translate-y-8 -translate-x-8"></div>
 
         {/* Main Card */}
-        <div className="relative bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border border-white/50 dark:border-gray-700/50 rounded-3xl p-6 hover:shadow-2xl hover:scale-[1.02] hover:-translate-y-1 transition-all duration-500 group-hover:bg-white/95 dark:group-hover:bg-gray-900/95">
+        <div className="relative bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl p-6 hover:shadow-lg transition-shadow duration-200">
           {/* Header with Fun Icon and Title */}
           <div className="flex items-start justify-between mb-5">
             <div className="flex items-start space-x-4 flex-1 min-w-0">
@@ -434,29 +419,20 @@ const Groups = () => {
               <div
                 className={`${getGroupColor(
                   group.fieldOfStudy
-                )} p-3 rounded-2xl shadow-lg flex-shrink-0 transform group-hover:rotate-6 group-hover:scale-110 transition-all duration-300`}
+                )} p-3 rounded-lg shadow-sm flex-shrink-0`}
               >
                 <UserGroupIcon className="h-6 w-6 text-white" />
               </div>
 
               <div className="flex-1 min-w-0">
                 <div className="flex items-center space-x-2 mb-2">
-                  <h3 className="text-xl font-bold text-gray-900 dark:text-white truncate group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-blue-600 group-hover:to-purple-600 group-hover:bg-clip-text transition-all duration-300">
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white truncate">
                     {group.name}
                   </h3>
 
-                  {/* Fun Activity Emoji */}
-                  <span className="text-lg animate-pulse">
-                    {activity.level === "high"
-                      ? "🔥"
-                      : activity.level === "medium"
-                      ? "⚡"
-                      : "🌱"}
-                  </span>
-
                   {group.owner?._id === user?._id && (
-                    <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-gradient-to-r from-emerald-400 to-green-500 text-white shadow-sm flex-shrink-0 animate-bounce">
-                      👑 Owner
+                    <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 flex-shrink-0">
+                      Owner
                     </span>
                   )}
                 </div>
@@ -465,18 +441,6 @@ const Groups = () => {
                 </p>
               </div>
             </div>
-
-            {/* Favorite Button with Fun Animation */}
-            <button
-              onClick={() => toggleFavorite(group._id)}
-              className="text-gray-400 hover:text-yellow-500 transition-all duration-300 hover:scale-125 hover:rotate-12 p-1 flex-shrink-0"
-            >
-              {favoriteGroups.includes(group._id) ? (
-                <StarIconSolid className="h-5 w-5 text-yellow-500 drop-shadow-sm animate-pulse" />
-              ) : (
-                <StarIcon className="h-5 w-5" />
-              )}
-            </button>
           </div>
 
           {/* Sleek Stats Cards */}
@@ -599,9 +563,8 @@ const Groups = () => {
             {/* Refined Field Badge */}
             {group.fieldOfStudy && (
               <div className="flex justify-center">
-                <div className="inline-flex items-center px-3 py-1.5 rounded-xl text-sm font-bold bg-gradient-to-r from-purple-100 via-pink-100 to-purple-100 dark:from-purple-900/30 dark:via-pink-900/30 dark:to-purple-900/30 text-purple-700 dark:text-purple-300 border border-purple-200/50 dark:border-purple-700/50 shadow-sm">
-                  <div className="w-2 h-2 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 mr-2 animate-pulse"></div>
-                  <span>📚 {group.fieldOfStudy}</span>
+                <div className="inline-flex items-center px-3 py-1.5 rounded-lg text-sm font-medium bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300">
+                  <span>{group.fieldOfStudy}</span>
                 </div>
               </div>
             )}
@@ -619,13 +582,13 @@ const Groups = () => {
                       <img
                         src={avatar}
                         alt={`Member ${index + 1}`}
-                        className="w-8 h-8 rounded-full border-3 border-white dark:border-gray-800 shadow-lg hover:scale-110 transition-transform duration-200"
+                        className="w-8 h-8 rounded-full border-2 border-white dark:border-gray-800"
                       />
                       <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-400 rounded-full border-2 border-white dark:border-gray-800"></div>
                     </div>
                   ))}
                 {memberCount > 4 && (
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-400 to-pink-500 border-3 border-white dark:border-gray-800 flex items-center justify-center shadow-lg hover:scale-110 transition-transform duration-200">
+                  <div className="w-8 h-8 rounded-full bg-gray-400 border-2 border-white dark:border-gray-800 flex items-center justify-center">
                     <span className="text-xs font-bold text-white">
                       +{memberCount - 4}
                     </span>
@@ -660,7 +623,7 @@ const Groups = () => {
               <button
                 onClick={() => handleJoinGroup(group._id)}
                 disabled={actionLoading[group._id]}
-                className="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-bold py-2.5 px-4 rounded-2xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 px-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {actionLoading[group._id] ? (
                   <div className="flex items-center justify-center space-x-2">
@@ -678,7 +641,7 @@ const Groups = () => {
             ) : (
               <button
                 onClick={() => navigate(`/groups/${group._id}`)}
-                className="flex-1 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold py-2.5 px-4 rounded-2xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+                className="flex-1 bg-green-600 hover:bg-green-700 text-white font-medium py-2.5 px-4 rounded-lg transition-colors"
               >
                 <div className="flex items-center justify-center space-x-2">
                   <span>🔍 Explore Group</span>
@@ -691,14 +654,14 @@ const Groups = () => {
               <div className="flex space-x-1">
                 <button
                   onClick={() => openMembers(group)}
-                  className="bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white p-2.5 rounded-xl shadow-md hover:shadow-lg transform hover:scale-110 transition-all duration-300"
+                  className="bg-indigo-600 hover:bg-indigo-700 text-white p-2.5 rounded-lg transition-colors"
                   title="Manage Members"
                 >
                   <UsersIcon className="h-4 w-4" />
                 </button>
                 <button
                   onClick={() => openSettings(group)}
-                  className="bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white p-2.5 rounded-xl shadow-md hover:shadow-lg transform hover:scale-110 transition-all duration-300"
+                  className="bg-gray-600 hover:bg-gray-700 text-white p-2.5 rounded-lg transition-colors"
                   title="Group Settings"
                 >
                   <CogIcon className="h-4 w-4" />
@@ -711,7 +674,7 @@ const Groups = () => {
               <button
                 onClick={() => confirmLeaveGroup(group._id, group.name)}
                 disabled={actionLoading[group._id]}
-                className="bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white p-2.5 rounded-xl shadow-md hover:shadow-lg transform hover:scale-110 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                className="bg-red-600 hover:bg-red-700 text-white p-2.5 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 title="Leave Group"
               >
                 {actionLoading[group._id] ? (
@@ -723,9 +686,9 @@ const Groups = () => {
             )}
 
             <button
-              onClick={() => openPreview(group)}
-              className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white p-2.5 rounded-xl shadow-md hover:shadow-lg transform hover:scale-110 transition-all duration-300"
-              title="Preview Group"
+              onClick={() => navigate(`/groups/${group._id}`)}
+              className="bg-amber-600 hover:bg-amber-700 text-white p-2.5 rounded-lg transition-colors"
+              title="View Group"
             >
               <EyeIcon className="h-4 w-4" />
             </button>
@@ -939,286 +902,6 @@ const Groups = () => {
             </>
           )}
         </>
-      )}
-
-      {/* Group Preview Modal */}
-      {showPreviewModal && selectedGroup && (
-        <div className="fixed inset-0 z-50 overflow-y-auto">
-          <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-            <div
-              className="fixed inset-0 bg-black bg-opacity-50 transition-opacity backdrop-blur-sm"
-              onClick={() => setShowPreviewModal(false)}
-            />
-
-            <div className="inline-block align-bottom bg-white dark:bg-gray-800 rounded-2xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full">
-              {/* Cover Image */}
-              <div className="relative h-48 bg-gradient-to-r from-blue-500 to-purple-600">
-                <img
-                  src={selectedGroup.coverImage}
-                  alt={selectedGroup.name}
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-                <button
-                  onClick={() => setShowPreviewModal(false)}
-                  className="absolute top-4 right-4 p-2 bg-black/20 hover:bg-black/40 rounded-full text-white transition-colors"
-                >
-                  <XMarkIcon className="h-5 w-5" />
-                </button>
-
-                {/* Group Icon Overlay */}
-                <div className="absolute bottom-4 left-6">
-                  <div
-                    className={`${selectedGroup.color} p-4 rounded-2xl shadow-lg`}
-                  >
-                    <UserGroupIcon className="h-8 w-8 text-white" />
-                  </div>
-                </div>
-              </div>
-
-              <div className="p-6">
-                {/* Header */}
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex-1">
-                    <div className="flex items-center space-x-3 mb-2">
-                      <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-                        {selectedGroup.name}
-                      </h2>
-                      {selectedGroup.isActive && (
-                        <div className="flex items-center space-x-1">
-                          <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                          <span className="text-sm text-green-600 dark:text-green-400">
-                            Active
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                    <div className="flex items-center space-x-2 mb-3">
-                      {selectedGroup.role && (
-                        <span
-                          className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
-                            selectedGroup.role === "Admin"
-                              ? "bg-blue-100 dark:bg-blue-900/20 text-blue-800 dark:text-blue-300"
-                              : selectedGroup.role === "Member"
-                              ? "bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-300"
-                              : "bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300"
-                          }`}
-                        >
-                          {selectedGroup.role}
-                        </span>
-                      )}
-                      <span
-                        className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${getFieldColor(
-                          selectedGroup.field
-                        )}`}
-                      >
-                        {researchFields.find(
-                          (f) => f.id === selectedGroup.field
-                        )?.name || "Other"}
-                      </span>
-                      <div
-                        className={`w-3 h-3 rounded-full ${getActivityColor(
-                          selectedGroup.activityLevel
-                        )}`}
-                      />
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => toggleFavorite(selectedGroup.id)}
-                    className="text-gray-400 hover:text-yellow-500 transition-colors"
-                  >
-                    {favoriteGroups.includes(selectedGroup.id) ? (
-                      <StarIconSolid className="h-6 w-6 text-yellow-500" />
-                    ) : (
-                      <StarIcon className="h-6 w-6" />
-                    )}
-                  </button>
-                </div>
-
-                {/* Description */}
-                <p className="text-gray-600 dark:text-gray-400 mb-6">
-                  {selectedGroup.description}
-                </p>
-
-                {/* Enhanced Stats */}
-                <div className="grid grid-cols-3 gap-4 mb-6">
-                  <div className="text-center p-4 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 rounded-xl border border-blue-200 dark:border-blue-800">
-                    <div className="text-2xl font-bold text-blue-900 dark:text-blue-100">
-                      {selectedGroup.memberCount ||
-                        selectedGroup.members?.length ||
-                        0}
-                    </div>
-                    <div className="text-sm text-blue-600 dark:text-blue-400 font-medium">
-                      Members
-                    </div>
-                  </div>
-                  <div className="text-center p-4 bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 rounded-xl border border-green-200 dark:border-green-800">
-                    <div className="text-2xl font-bold text-green-900 dark:text-green-100">
-                      {(() => {
-                        const activity = getActivityLevel(selectedGroup);
-                        return activity.level === "high"
-                          ? "🔥"
-                          : activity.level === "medium"
-                          ? "⚡"
-                          : "🌱";
-                      })()}
-                    </div>
-                    <div className="text-sm text-green-600 dark:text-green-400 font-medium">
-                      {getActivityLevel(selectedGroup).label}
-                    </div>
-                  </div>
-                  <div className="text-center p-4 bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 rounded-xl border border-purple-200 dark:border-purple-800">
-                    <div className="text-lg font-bold text-purple-900 dark:text-purple-100">
-                      {new Date(selectedGroup.createdAt).toLocaleDateString(
-                        "en-US",
-                        {
-                          month: "short",
-                          year: "numeric",
-                        }
-                      )}
-                    </div>
-                    <div className="text-sm text-purple-600 dark:text-purple-400 font-medium">
-                      Founded
-                    </div>
-                  </div>
-                  <div className="text-center p-3 bg-gray-50 dark:bg-gray-700 rounded-xl">
-                    <div className="text-2xl font-bold text-gray-900 dark:text-white">
-                      {selectedGroup.upcomingEvents?.length || 0}
-                    </div>
-                    <div className="text-sm text-gray-500 dark:text-gray-400">
-                      Events
-                    </div>
-                  </div>
-                </div>
-
-                {/* Members Preview */}
-                <div className="mb-6">
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
-                    Members
-                  </h3>
-                  <div className="flex items-center">
-                    <div className="flex -space-x-3">
-                      {getMemberAvatars(selectedGroup)
-                        .slice(0, 8)
-                        .map((avatar, index) => (
-                          <img
-                            key={index}
-                            src={avatar}
-                            alt={`Member ${index + 1}`}
-                            className="w-10 h-10 rounded-full border-3 border-white dark:border-gray-800 shadow-sm"
-                          />
-                        ))}
-                      {(selectedGroup.memberCount ||
-                        selectedGroup.members?.length ||
-                        0) > 8 && (
-                        <div className="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-700 border-3 border-white dark:border-gray-800 flex items-center justify-center">
-                          <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                            +
-                            {(selectedGroup.memberCount ||
-                              selectedGroup.members?.length ||
-                              0) - 8}
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                    <span className="ml-4 text-sm text-gray-500 dark:text-gray-400">
-                      and{" "}
-                      {(selectedGroup.memberCount ||
-                        selectedGroup.members?.length ||
-                        0) -
-                        Math.min(
-                          8,
-                          getMemberAvatars(selectedGroup).length || 0
-                        )}{" "}
-                      others
-                    </span>
-                  </div>
-                </div>
-
-                {/* Recent Papers */}
-                {selectedGroup.recentPapers && (
-                  <div className="mb-6">
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
-                      Recent Papers
-                    </h3>
-                    <div className="space-y-2">
-                      {selectedGroup.recentPapers
-                        .slice(0, 3)
-                        .map((paper, index) => (
-                          <div
-                            key={index}
-                            className="flex items-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg"
-                          >
-                            <DocumentTextIcon className="h-5 w-5 text-gray-400 mr-3" />
-                            <span className="text-sm text-gray-900 dark:text-white">
-                              {paper}
-                            </span>
-                          </div>
-                        ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Upcoming Events */}
-                {selectedGroup.upcomingEvents &&
-                  selectedGroup.upcomingEvents.length > 0 && (
-                    <div className="mb-6">
-                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
-                        Upcoming Events
-                      </h3>
-                      <div className="space-y-2">
-                        {selectedGroup.upcomingEvents.map((event, index) => (
-                          <div
-                            key={index}
-                            className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg"
-                          >
-                            <div className="flex items-center">
-                              <CalendarIcon className="h-5 w-5 text-gray-400 mr-3" />
-                              <span className="text-sm text-gray-900 dark:text-white">
-                                {event.name}
-                              </span>
-                            </div>
-                            <span className="text-sm text-gray-500 dark:text-gray-400">
-                              {event.date}
-                            </span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                {/* Actions */}
-                <div className="flex items-center justify-between pt-4 border-t border-gray-200 dark:border-gray-700">
-                  <div className="flex items-center space-x-3">
-                    {selectedGroup.role ? (
-                      <ModernButton
-                        onClick={() => navigate(`/groups/${selectedGroup._id}`)}
-                      >
-                        View Group
-                      </ModernButton>
-                    ) : (
-                      <ModernButton>
-                        {selectedGroup.isPublic
-                          ? "Join Group"
-                          : "Request Access"}
-                      </ModernButton>
-                    )}
-                    <ModernButton variant="secondary">
-                      <ChatBubbleLeftRightIcon className="h-4 w-4 mr-2" />
-                      Message
-                    </ModernButton>
-                  </div>
-                  {selectedGroup.lastActivity && (
-                    <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
-                      <ClockIcon className="h-4 w-4 mr-1" />
-                      <span>Active {selectedGroup.lastActivity}</span>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
       )}
 
       {/* Create Group Modal */}

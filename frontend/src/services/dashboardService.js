@@ -187,8 +187,8 @@ const dashboardService = {
             files.push({
               id: paper._id,
               name: paper.originalFileName,
-              type: this.getFileExtension(paper.originalFileName),
-              size: this.formatFileSize(paper.fileSize),
+              type: dashboardService.getFileExtension(paper.originalFileName),
+              size: dashboardService.formatFileSize(paper.fileSize),
               uploadedAt: paper.createdAt,
               groupName: group.name,
               mimeType: paper.mimeType,

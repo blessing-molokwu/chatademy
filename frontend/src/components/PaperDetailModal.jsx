@@ -154,7 +154,7 @@ const PaperDetailModal = ({ paperId, onClose, onUpdate }) => {
           )}
 
           {/* Content */}
-          <div className="flex-1 overflow-hidden flex flex-col">
+          <div className="flex-1 overflow-hidden flex flex-col min-h-0">
             {loading ? (
               <div className="flex justify-center items-center h-full">
                 <LoadingSpinner />
@@ -168,7 +168,7 @@ const PaperDetailModal = ({ paperId, onClose, onUpdate }) => {
             ) : paper ? (
               <>
                 {/* Tab Content */}
-                <div className="flex-1 overflow-hidden">
+                <div className="flex-1 overflow-hidden min-h-0">
                   {activeTab === "overview" && (
                     <div className="h-full overflow-y-auto p-6 space-y-6">
                       {/* Title and Category */}
